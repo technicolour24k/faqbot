@@ -10,7 +10,7 @@ client.on('ready', () => {
 
 client.on('messageCreate', msg => {
 
-    switch (cmd) {
+    switch (msg) {
         case 'ping':
             bot.sendMessage({
                 to: channelID,
