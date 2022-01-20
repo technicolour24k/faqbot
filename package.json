@@ -12,6 +12,6 @@
         "winston": "^3.4.0"
     },
     "scripts":{
-      "heroku-postbuild":"node bot.js"
+      "postbuild":"node bot.js"
     }
 }
