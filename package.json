@@ -12,6 +12,6 @@
         "winston": "^3.4.0"
     },
     "scripts":{
-      "postbuild":"node bot.js"
+      // "postbuild":"node bot.js"
     }
 }
