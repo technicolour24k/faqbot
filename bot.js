@@ -22,7 +22,7 @@ client.on('messageCreate', msg => {
     //     break;
     // }
     if (msg.content === 'ping') {
-       msg.reply('pong');
+       msg.reply('Pongo!');
      }
   });
 
