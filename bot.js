@@ -9,9 +9,24 @@ client.on('ready', () => {
 });
 
 client.on('messageCreate', msg => {
-    if (msg.content === 'ping') {
-      msg.reply('pong');
+
+    switch (cmd) {
+        case 'ping':
+            bot.sendMessage({
+                to: channelID,
+                message: 'Pong!'
+            });
+
+            case 'nom':
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'Eating!'
+                })
+            break;
     }
+    // if (msg.content === 'ping') {
+    //   msg.reply('pong');
+    // }
   });
 
 
