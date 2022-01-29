@@ -56,8 +56,8 @@ function msgResponse(msg) {
         }
         else if (msg.includes(key)) { //if someone's not asking for help, check to see if the message includes one of the question keys
             if (debug) {console.log(`KEY CHECK2: ${key}: ${value}`);} 
-            reply = `[**Keyword found: ${key}**] ${value}. 
-*Wrong one? Try saying "available keywords" to see my list of keywords.*` //reply with the answer to the keyword we find, and then break out of the loop
+            //reply with the answer to the keyword we find, and then break out of the loop
+            reply = `[**Keyword found: ${key}**] ${value}. \n\n*Wrong one? Try saying "available keywords" to see my list of keywords.*` 
             break;
         }
       }
