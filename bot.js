@@ -39,7 +39,8 @@ function msgResponse(msg) {
     const questions = { //the list of things we want to reply to, and how we want to reply
         "pol-0033":"Try turning your computer off, and restarting your router - Take the plug out, leave it for 30 seconds, and then plug it all back in.",
         "test":"You wanna test? That'll be fun!",
-        "pancakes":"Let's eat!"
+        "pancakes":"Let's eat!",
+        "omnom":"FEED ME SEYMOUR!"
     }
 
     for (const [key, value] of Object.entries(questions)) { //for everything in the "questions" object,
