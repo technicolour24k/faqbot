@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { sys } = require('ping');
 
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -40,7 +41,8 @@ function msgResponse(msg) {
         "pol-0033":"Try turning your computer off, and restarting your router - Take the plug out, leave it for 30 seconds, and then plug it all back in.",
         "test":"You wanna test? That'll be fun!",
         "pancakes":"Let's eat!",
-        "omnom":"FEED ME SEYMOUR!"
+        "omnom":"FEED ME SEYMOUR!",
+        "server ping":""
     }
 
     for (const [key, value] of Object.entries(questions)) { //for everything in the "questions" object,
@@ -57,6 +59,13 @@ function msgResponse(msg) {
         else if (msg.includes(key)) { //if someone's not asking for help, check to see if the message includes one of the question keys
             if (debug) {console.log(`KEY CHECK2: ${key}: ${value}`);} 
             //reply with the answer to the keyword we find, and then break out of the loop
+            sys.probe('HOSTNAME / IP', (isAlive) => {
+                if(isAlive) {
+                    value = "Looks like it's up to me?"
+                } else {
+                    value = value.attachFiles('["https://media.giphy.com/media/JrkbVRQA5adwle1ykt/giphy.gif"]);')
+                }
+            });
             reply = `[**Keyword found: ${key}**] ${value}. \n\n*Wrong one? Try saying "available keywords" to see my list of keywords.*` 
             break;
         }
