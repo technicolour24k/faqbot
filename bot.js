@@ -42,7 +42,7 @@ function msgResponse(msg) {
         "test":"You wanna test? That'll be fun!",
         "pancakes":"Let's eat!",
         "omnom":"FEED ME SEYMOUR!",
-        "server ping":""
+        "server ping":"https://c.tenor.com/7937bBKQCxgAAAAC/dead-server.gif"
     }
 
     for (const [key, value] of Object.entries(questions)) { //for everything in the "questions" object,
@@ -59,17 +59,19 @@ function msgResponse(msg) {
         else if (msg.includes(key)) { //if someone's not asking for help, check to see if the message includes one of the question keys
             if (debug) {console.log(`KEY CHECK2: ${key}: ${value}`);} 
             //reply with the answer to the keyword we find, and then break out of the loop
-            sys.probe('HOSTNAME / IP', (isAlive) => {
-                if(isAlive) {
-                    value = "Looks like it's up to me?"
-                } else {
-                    value = value.attachFiles('["https://media.giphy.com/media/JrkbVRQA5adwle1ykt/giphy.gif"]);')
-                }
-            });
             reply = `[**Keyword found: ${key}**] ${value}. \n\n*Wrong one? Try saying "available keywords" to see my list of keywords.*` 
             break;
         }
-      }
+    }
+    if (msg.includes("server ping")) {
+        sys.probe('google.com', (isAlive) => {
+            if(isAlive) {
+                reply = "It's looking pretty alive to me?"
+            } else {
+                reply.setImage(["https://www.thisiscolossal.com/wp-content/uploads/2018/04/agif1opt.gif"]);
+            }
+        });
+    }
 
     if (debug) {console.log(`Function Message: ${msg}`)}
     if (debug) {console.log(`Function Reply: ${reply}`)}
