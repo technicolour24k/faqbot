@@ -17,9 +17,9 @@ const questions = { //the list of things we want to reply to, and how we want to
     "omnom":"FEED ME SEYMOUR!"
 }
 const pingHosts = { //the list of hosts we want to ping
-    "NS Wiki":"nocturnalsouls.net",
-    "NS Members Portal":"members.nocturnalsouls.net",
-    "Login Server":"connect.nocturnalsouls.net"
+    "NS Wiki":"google.com",
+    "NS Members Portal":"google.com",
+    // "Login Server":"connect.nocturnalsouls.net"
 }
 
 client.on('ready', () => {
@@ -51,19 +51,25 @@ client.on('messageCreate', msg => {
             }
             response = `Available keywords: ${commandList}`; //send the reply and break out of the loop
             if (debug) {console.log(`Available Keyword Reply: ${response}`)}
-
         }
         else if ((message.includes("server status")) || (message.includes("server down")) || (message.includes("server up"))) {        
             for (const [key, host] of Object.entries(pingHosts)) { //for everything in the "pingHosts" object,
                 ping.promise.probe(host)
                     .then(function (res) {
+                        console.log(res)
                         if (res.alive) {
                             response = `${key} is up!`
-                            console.log (`${key} is alive`)
+                            if (debug){
+                                console.log (`${key} is alive`)
+                                consolve.log(`${key} resolves to ${res.numeric_host}`)
+                            }
                         }
                         else if (res.alive == false) {
                             response = `${key} is down!`
-                            console.log (`${key} is dead`)
+                            if (debug){
+                                console.log (`${key} is dead`)
+                                consolve.log(`${key} resolves to ${res.numeric_host}`)
+                            }
                         }
                         else {
                             response = "ERROR: Cannot reconcile server. This should not happen. Contact your server admin."
