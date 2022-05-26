@@ -64,14 +64,14 @@ client.on('messageCreate', msg => {
                             response = `${key} is up!`
                             if (debug){
                                 console.log (`${key} is alive`)
-                                consolve.log(`${key} resolves to ${res.numeric_host}`)
+                                consolve.log(`${key} resolves to ${res.ip}`)
                             }
                         }
                         else if (res.online == false) {
                             response = `${key} is down!`
                             if (debug){
                                 console.log (`${key} is dead`)
-                                consolve.log(`${key} resolves to ${res.numeric_host}`)
+                                consolve.log(`${key} resolves to ${res.ip}`)
                             }
                         }
                         else {
