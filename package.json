@@ -7,6 +7,6 @@
     "dependencies": {
         "discord.js": "^13.6.0",
         "dotenv": "^14.2.0",
-        "ping": "^0.4.2"
+        "tcp-ping-port": "^1.0.1"
     }
 }

@@ -1,5 +1,6 @@
 require('dotenv').config();
-const ping = require('ping');
+const { tcpPingPort } = require("tcp-ping-port")
+
 
 
 const { Client, Intents } = require('discord.js');
@@ -16,11 +17,13 @@ const questions = { //the list of things we want to reply to, and how we want to
     "pancakes":"Let's eat!",
     "omnom":"FEED ME SEYMOUR!"
 }
-const pingHosts = { //the list of hosts we want to ping
-    "NS Wiki":"google.com",
-    "NS Members Portal":"google.com",
-    // "Login Server":"connect.nocturnalsouls.net"
-}
+
+const pingHosts = {
+    "NS Wiki": {address: "nocturnalsouls.net", port:80},
+    "NS Members Portal":{address: "members.nocturnalsouls.net", port:80},
+    "Login Server":{address: "connect.nocturnalsouls.net", port:22100}
+    };
+
 
 client.on('ready', () => {
     if (debug) {console.log(`Logged in as tag: ${client.user.tag}!`);}
@@ -54,17 +57,17 @@ client.on('messageCreate', msg => {
         }
         else if ((message.includes("server status")) || (message.includes("server down")) || (message.includes("server up"))) {        
             for (const [key, host] of Object.entries(pingHosts)) { //for everything in the "pingHosts" object,
-                ping.promise.probe(host)
+                tcpPingPort(host.address, host.port)
                     .then(function (res) {
                         console.log(res)
-                        if (res.alive) {
+                        if (res.online) {
                             response = `${key} is up!`
                             if (debug){
                                 console.log (`${key} is alive`)
                                 consolve.log(`${key} resolves to ${res.numeric_host}`)
                             }
                         }
-                        else if (res.alive == false) {
+                        else if (res.online == false) {
                             response = `${key} is down!`
                             if (debug){
                                 console.log (`${key} is dead`)
