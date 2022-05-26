@@ -1,8 +1,5 @@
 require('dotenv').config();
 const { tcpPingPort } = require("tcp-ping-port")
-
-
-
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -19,10 +16,26 @@ const questions = { //the list of things we want to reply to, and how we want to
 }
 
 const pingHosts = {
-    "NS Wiki": {address: "nocturnalsouls.net", port:80},
-    "NS Members Portal":{address: "members.nocturnalsouls.net", port:80},
-    "Login Server":{address: "connect.nocturnalsouls.net", port:22100}
-    };
+    "NS Sites": {
+        // "NS Wiki": {address: "nocturnalsouls.net", port:80},
+        // "NS Members Portal":{address: "members.nocturnalsouls.net", port:80}
+    },
+    
+    "Login Servers": {
+        // "Login Server - Data":{address: "connect.nocturnalsouls.net", port:54001},
+        // "Login Server - Auth":{address: "connect.nocturnalsouls.net", port:54230},
+        // "Login Server - View":{address: "connect.nocturnalsouls.net", port:54231},
+    },
+
+    "Zone Servers": {
+        "West Ronfaure":{address:"123.234.345.456", port:12345},
+        "East Ronfaure":{address:"123.234.345.456", port:12345},
+        "Ghelsba Outpost":{address:"123.234.345.456", port:12345},
+        "West Saruta":{address:"123.234.345.456", port:12345},
+        "East Saruta":{address:"123.234.345.456", port:12345},
+        "Giddeus":{address:"123.234.345.456", port:12345},
+    }
+};
 
 
 client.on('ready', () => {
@@ -55,23 +68,28 @@ client.on('messageCreate', msg => {
             response = `Available keywords: ${commandList}`; //send the reply and break out of the loop
             if (debug) {console.log(`Available Keyword Reply: ${response}`)}
         }
-        else if ((message.includes("server status")) || (message.includes("server down")) || (message.includes("server up"))) {        
-            for (const [key, host] of Object.entries(pingHosts)) { //for everything in the "pingHosts" object,
+        else if ((message.includes("server status")) || (message.includes("server down")) || (message.includes("server up"))) {   
+            response = `If you don't hear back, everything's good!`
+            msg.reply(response)     
+            response =""
+            /********************************************************************************************************************************
+             * ********************************************** Cycle through Web based server states *****************************************
+             ********************************************************************************************************************************/
+            for (const [key, host] of Object.entries(pingHosts['NS Sites'])) { //for everything in the "Web" object,
                 tcpPingPort(host.address, host.port)
                     .then(function (res) {
                         console.log(res)
                         if (res.online) {
-                            response = `${key} is up!`
                             if (debug){
                                 console.log (`${key} is alive`)
-                                consolve.log(`${key} resolves to ${res.ip}`)
+                                console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
                             }
                         }
                         else if (res.online == false) {
                             response = `${key} is down!`
                             if (debug){
                                 console.log (`${key} is dead`)
-                                consolve.log(`${key} resolves to ${res.ip}`)
+                                console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
                             }
                         }
                         else {
@@ -80,7 +98,65 @@ client.on('messageCreate', msg => {
                         }
                         msg.reply(response);
                     });
-                }}
+                }
+            
+            /********************************************************************************************************************************
+             * ************************************************ Cycle through Login server states *******************************************
+             ********************************************************************************************************************************/
+                for (const [key, host] of Object.entries(pingHosts['Login Servers'])) {
+                    tcpPingPort(host.address, host.port)
+                        .then(function (res) {
+                            console.log(res)
+                            if (res.online) {
+                                if (debug){
+                                    console.log (`${key} is alive`)
+                                    console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
+                                }
+                            }
+                            else if (res.online == false) {
+                                response = `Login server is struggling - hold up.`
+                                if (debug){
+                                    console.log (`${key} is dead`)
+                                    console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
+                                }
+                            }
+                            else {
+                                response = "ERROR: Cannot reconcile server. This should not happen. Contact your server admin."
+                                console.log("I'm very confused, it's Schrodingers Server!")
+                            }
+                            msg.reply(response);
+                        });
+                    }
+
+            /********************************************************************************************************************************
+             * ***************************************** Cycle through In-Game Zone server states *******************************************
+             ********************************************************************************************************************************/
+                for (const [key, host] of Object.entries(pingHosts['Zone Servers'])) {
+                    tcpPingPort(host.address, host.port)
+                        .then(function (res) {
+                            console.log(res)
+                            if (res.online) {
+                                if (!debug){
+                                    console.log (`${key} is alive`)
+                                    console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
+                                }
+                            }
+                            else if (res.online == false) {
+                                response = `${key} server is struggling - hold up.`
+                                if (debug){
+                                    console.log (`${key} is dead`)
+                                    console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
+                                }
+                            }
+                            else {
+                                response = "ERROR: Cannot reconcile server. This should not happen. Contact your server admin."
+                                console.log("I'm very confused, it's Schrodingers Server!")
+                            }
+                            msg.reply(response);
+                        });
+                    }
+
+            }
         //Finish special keywords, do a generic loop to check questions const
         else {
             for (const [key, value] of Object.entries(questions)) { //for everything in the "questions" object,
@@ -89,7 +165,7 @@ client.on('messageCreate', msg => {
                         response = `[**Keyword found: ${key}**] ${value}. \n\n*Wrong one? Try saying "available keywords" to see my list of keywords.*` 
                         break;
                     }
-                    if (debug) {console.log(`Generic For response: ${response}`)}
+                    if (debug) {console.log(`Generic "questions" For response: ${response}`)}
                 }
             }
 
