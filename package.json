@@ -1,9 +1,9 @@
 {
-    "name": "greeter-bot",
+    "name": "faqbot",
     "version": "1.0.0",
-    "description": "My First Discord Bot",
+    "description": "TC24k FAQBot",
     "main": "bot.js",
-    "author": "Your Name",
+    "author": "Tony Jordan",
     "dependencies": {
         "discord.js": "^13.6.0",
         "dotenv": "^14.2.0",
