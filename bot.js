@@ -26,7 +26,7 @@ const pingHosts = {
 
 
 client.on('ready', () => {
-    if (debug) {console.log(`Logged in as tag: ${client.user.tag}!`);}
+    console.log(`Logged in as tag: ${client.user.tag}!`);
 });
 
 client.on('messageCreate', msg => {
@@ -93,14 +93,11 @@ client.on('messageCreate', msg => {
                 }
             }
 
-        if (debug) {console.log(`Function Message: ${msg}`)}
         if (debug) {console.log(`Final response: ${response}`)}
-
-        if (debug) {console.log(`response: ${response}`)}
         if ((response) || ((!response==="") && (!response==undefined))) //if a response exists then reply with it
             msg.reply(response);
         }
-        response = null //blank the response again for safety
+        response = null //blank the response again for safety, otherwise.. LOOPS!
 });
 
 client.login(process.env.TOKEN); //prep all this jazz and then log in the bot
