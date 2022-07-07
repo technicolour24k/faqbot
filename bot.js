@@ -2,10 +2,11 @@ require('dotenv').config();
 const { tcpPingPort } = require("tcp-ping-port")
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
-let reply; //craft a blank reply to stop us from responding with old reply
-let response;
 const debug = false;
+
+let response;
+let hostDown = false
+let hostNotChecked = true
 let commandList="**server status**"; //create a blank command list to populate with questions array
 let commandListCreated = false
 const questions = { //the list of things we want to reply to, and how we want to reply
@@ -22,18 +23,18 @@ const pingHosts = {
     },
     
     "Login Servers": {
-        // "Login Server - Data":{address: "connect.nocturnalsouls.net", port:54001},
-        // "Login Server - Auth":{address: "connect.nocturnalsouls.net", port:54230},
-        // "Login Server - View":{address: "connect.nocturnalsouls.net", port:54231},
+        "Login Server - Data":{address: "test", port:54001},
+        "Login Server - Auth":{address: "test", port:54230},
+        "Login Server - View":{address: "test", port:54231},
     },
 
     "Zone Servers": {
-        "West Ronfaure":{address:"123.234.345.456", port:12345},
-        "East Ronfaure":{address:"123.234.345.456", port:12345},
-        "Ghelsba Outpost":{address:"123.234.345.456", port:12345},
-        "West Saruta":{address:"123.234.345.456", port:12345},
-        "East Saruta":{address:"123.234.345.456", port:12345},
-        "Giddeus":{address:"123.234.345.456", port:12345},
+        // "West Ronfaure":{address:"123.234.345.456", port:12345},
+        // "East Ronfaure":{address:"123.234.345.456", port:12345},
+        // "Ghelsba Outpost":{address:"123.234.345.456", port:12345},
+        // "West Saruta":{address:"123.234.345.456", port:12345},
+        // "East Saruta":{address:"123.234.345.456", port:12345},
+        // "Giddeus":{address:"123.234.345.456", port:12345},
     }
 };
 
@@ -106,6 +107,7 @@ client.on('messageCreate', msg => {
                 tcpPingPort(host.address, host.port)
                     .then(function (res) {
                         console.log(res)
+                        console.log(`${res.host} - ${hostDown}. ${hostNotChecked}`)
                         if (res.online) {
                             if (debug){
                                 console.log (`${key} is alive`)
@@ -113,7 +115,7 @@ client.on('messageCreate', msg => {
                             }
                         }
                         else if (res.online == false) {
-                            response = `Login server is struggling - hold up.`
+                            hostDown = true
                             if (debug){
                                 console.log (`${key} is dead`)
                                 console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
@@ -123,7 +125,9 @@ client.on('messageCreate', msg => {
                             response = `ERROR: Cannot reconcile server. This should not happen. Contact your server admin.`
                             console.log(`I'm very confused, it's Schrodingers Server!`)
                         }
-                        msg.reply(response);
+                        if ((hostDown) && (hostNotChecked)) {response = `Login server is struggling - hold up.`}
+                        msg.reply(response); 
+                        hostNotChecked = false
                     });
                 }
 
@@ -141,11 +145,11 @@ client.on('messageCreate', msg => {
                             }
                         }
                         else if (res.online == false) {
-                            response = `${key} server is struggling - hold up.`
                             if (debug){
                                 console.log (`${key} is dead`)
                                 console.log(`${key} resolves to ${res.host}(${res.ip}):${host.port}`)
                             }
+                            response = `${key} server is struggling - hold up.`
                         }
                         else {
                             response = `ERROR: Cannot reconcile server. This should not happen. Contact your server admin.`
